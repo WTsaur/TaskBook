@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskBook.Pages.DetailsPage">
+
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3"
+               Padding="24"
+               CornerRadius="0">
+            <Label x:Name="ListName"
+                Text="{Binding Name}"
+                HorizontalTextAlignment="Center"
+                TextColor="White"
+                FontSize="36"/>
+        </Frame>
+        <Entry x:Name="SearchEntry"
+            Placeholder="Search..."
+            Margin="20,0,30,10"
+            Completed="SearchEntry_Completed"/>
+
+        <Frame  x:Name="TaskFrame" BackgroundColor="#2196F3" IsVisible="false">
+            <StackLayout>
+                <Label Text="Task Creator" FontSize="Title" TextColor="AliceBlue"/>
+                <Entry x:Name="TaskName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Entry x:Name="TaskDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Picker x:Name="TaskPriorityPicker" Title="Priority" TitleColor="AliceBlue" HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>High Priority</x:String>
+                        <x:String>Low Priority</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Deadline:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
+                <DatePicker x:Name="TaskDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
+                <TimePicker x:Name="TaskTimePicker"/>
+            </StackLayout>
+        </Frame>
+
+        <Frame x:Name="ApptFrame" BackgroundColor="#2196F3" IsVisible="false">
+            <StackLayout>
+                <Button Text="X" BackgroundColor="#2196F3"/>
+                <Label Text="Appointment Creator" FontSize="Title" TextColor="AliceBlue"/>
+                <Entry x:Name="ApptName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Entry x:Name="ApptDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Picker x:Name="ApptPriorityPicker" Title="Priority" TitleColor="AliceBlue" HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>High Priority</x:String>
+                        <x:String>Low Priority</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Start Date:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
+                <DatePicker x:Name="ApptStartDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
+                <TimePicker x:Name="ApptStartTimePicker"/>
+                <Label Text="End Date:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
+                <DatePicker x:Name="ApptEndDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
+                <TimePicker x:Name="ApptEndTimePicker"/>
+                <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
+            </StackLayout>
+        </Frame>
+
+        <Label Text="Tasks"
+               FontSize="Subtitle"
+               Padding="20,20,20,5"/>
+        <CollectionView
+            x:Name="TaskCV"
+            SelectionMode="None"
+            Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems>
+                            <SwipeItem Text="Delete"
+                                       BackgroundColor="Red"
+                                       Invoked="DeleteSwipeItem_Invoked"/>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <Frame BackgroundColor="SlateGray" BorderColor="Black">
+                        <Label Text="{Binding Name}"
+                               FontAttributes="Bold"/>
+                    </Frame>
+                </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Label Text="Appointments"
+               FontSize="Subtitle"
+               Padding="20,20,20,5"/>
+        <CollectionView
+            x:Name="AppointmentCV"
+            SelectionMode="None"
+            Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems>
+                            <SwipeItem Text="Delete"
+                                       BackgroundColor="Red"
+                                       Invoked="DeleteSwipeItem_Invoked"/>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <Frame BackgroundColor="SlateGray" BorderColor="Black">
+                        <Label Text="{Binding Name}"
+                               FontAttributes="Bold"/>
+                    </Frame>
+                </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button BackgroundColor="#2196F3"
+                WidthRequest="70"
+                HeightRequest="70"
+                CornerRadius="35"
+                Text="+"
+                FontSize="40"
+                VerticalOptions="Center"
+                HorizontalOptions="End"
+                Margin="30"
+                Clicked="CreateButton_Clicked"/>
+    </StackLayout>
+</ContentPage>
