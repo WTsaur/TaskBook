@@ -8,7 +8,6 @@
                Padding="24"
                CornerRadius="0">
             <Label x:Name="ListName"
-                Text="{Binding Name}"
                 HorizontalTextAlignment="Center"
                 TextColor="White"
                 FontSize="36"/>
@@ -17,9 +16,9 @@
             Placeholder="Search..."
             Margin="20,0,30,10"
             Completed="SearchEntry_Completed"/>
-
-        <Frame  x:Name="TaskFrame" BackgroundColor="#2196F3" IsVisible="false">
+        <ScrollView x:Name="TaskFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
+                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissButton_Clicked"/>
                 <Label Text="Task Creator" FontSize="Title" TextColor="AliceBlue"/>
                 <Entry x:Name="TaskName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="TaskDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
@@ -32,12 +31,12 @@
                 <Label Text="Deadline:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
                 <DatePicker x:Name="TaskDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
                 <TimePicker x:Name="TaskTimePicker"/>
+                <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
             </StackLayout>
-        </Frame>
-
-        <Frame x:Name="ApptFrame" BackgroundColor="#2196F3" IsVisible="false">
+        </ScrollView>
+        <ScrollView x:Name="ApptFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
-                <Button Text="X" BackgroundColor="#2196F3"/>
+                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissButton_Clicked"/>
                 <Label Text="Appointment Creator" FontSize="Title" TextColor="AliceBlue"/>
                 <Entry x:Name="ApptName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="ApptDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
@@ -55,8 +54,7 @@
                 <TimePicker x:Name="ApptEndTimePicker"/>
                 <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
             </StackLayout>
-        </Frame>
-
+        </ScrollView>
         <Label Text="Tasks"
                FontSize="Subtitle"
                Padding="20,20,20,5"/>

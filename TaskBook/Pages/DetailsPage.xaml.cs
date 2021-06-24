@@ -8,12 +8,13 @@ namespace TaskBook.Pages
     public partial class DetailsPage : ContentPage
     {
 
-        public Models.TaskList List;
+        public Models.TaskList List { get; set; }
 
         public DetailsPage(Models.TaskList list)
         {
             InitializeComponent();
             List = list;
+            ListName.Text = list.Name;
             TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
             AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
             BindingContext = this;
@@ -70,6 +71,12 @@ namespace TaskBook.Pages
             appointment.Stop = endDateTime;
             //attendees
             ApptFrame.IsVisible = false;
+        }
+
+        void DismissButton_Clicked(System.Object sender, System.EventArgs e)
+        {
+            ApptFrame.IsVisible = false;
+            TaskFrame.IsVisible = false;
         }
     }
 }

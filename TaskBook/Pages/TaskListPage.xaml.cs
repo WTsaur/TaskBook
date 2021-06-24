@@ -8,11 +8,12 @@ namespace TaskBook.Pages
 {
     public partial class TaskListPage : ContentPage
     {
-        public ObservableCollection<Models.TaskList> TaskLists;
+        public ObservableCollection<Models.TaskList> TaskLists { get; set; }
+
         public TaskListPage()
         {
             InitializeComponent();
-            TaskLists = new ObservableCollection<Models.TaskList> { new Models.TaskList { Name = "Test" } };
+            TaskLists = new ObservableCollection<Models.TaskList> { new Models.TaskList { Name = "Test", Items = new ObservableCollection<Models.Item> { new Models.Task { Name = "task 1" }, new Models.Appointment { Name = "appointment 1" } } } };
             BindingContext = this;
         }
 
@@ -28,6 +29,7 @@ namespace TaskBook.Pages
             {
                 await Navigation.PushAsync(new DetailsPage(selectedItem));
             }
+            TasklistCV.SelectedItem = null;
         }
 
         void DeleteSwipeItem_Invoked(System.Object sender, System.EventArgs e)
