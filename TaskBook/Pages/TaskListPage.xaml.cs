@@ -42,10 +42,10 @@ namespace TaskBook.Pages
         async void CreateButton_Clicked(System.Object sender, System.EventArgs e)
         {
             string result = await DisplayPromptAsync("Task List Creator", "Enter a name for your new task list.");
-            if (result != "")
+            if (result != null && result != "")
             {
                 OnPropertyChanged("TaskLists");
-                TaskLists.Add(new Models.TaskList { Name = result });
+                TaskLists.Add(new Models.TaskList { Name = result.Trim() });
             }
         }
     }

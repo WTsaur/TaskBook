@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -7,8 +8,8 @@ namespace TaskBook.Pages
 {
     public partial class DetailsPage : ContentPage
     {
-
         public Models.TaskList List { get; set; }
+        public ObservableCollection<string> AttendeeList { get; set; }
 
         public DetailsPage(Models.TaskList list)
         {
@@ -17,6 +18,7 @@ namespace TaskBook.Pages
             ListName.Text = list.Name;
             TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
             AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
+            AttendeeList = new ObservableCollection<string>();
             BindingContext = this;
         }
 
@@ -58,8 +60,8 @@ namespace TaskBook.Pages
         void CreateApptButton_Clicked(System.Object sender, System.EventArgs e)
         {
             Models.Appointment appointment = new Models.Appointment();
-            appointment.Name = ApptName.Text;
-            appointment.Description = ApptDescription.Text;
+            appointment.Name = ApptName.Text.Trim();
+            appointment.Description = ApptDescription.Text.Trim();
             appointment.Priority = ApptPriorityPicker.SelectedItem.ToString();
             DateTime startDate = ApptStartDatePicker.Date;
             TimeSpan startTime = ApptStartTimePicker.Time;
@@ -69,14 +71,83 @@ namespace TaskBook.Pages
             DateTime endDateTime = new DateTime(endDate.Year, endDate.Month, endDate.Day, endTime.Hours, endTime.Minutes, endTime.Seconds);
             appointment.Start = startDateTime;
             appointment.Stop = endDateTime;
-            //attendees
+            appointment.Attendees = AttendeeList.ToList();
+            OnPropertyChanged("List");
+            List.AddItem(appointment);
+            AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
             ApptFrame.IsVisible = false;
         }
 
-        void DismissButton_Clicked(System.Object sender, System.EventArgs e)
+        void CreateTaskButton_Clicked(System.Object sender, System.EventArgs e)
+        {
+            Models.Task task = new Models.Task();
+            task.Name = TaskName.Text.Trim();
+            task.Description = TaskDescription.Text.Trim();
+            task.Priority = TaskPriorityPicker.SelectedItem.ToString();
+            DateTime date = TaskDatePicker.Date;
+            TimeSpan time = TaskTimePicker.Time;
+            DateTime deadline = new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds);
+            task.Deadline = deadline;
+            OnPropertyChanged("List");
+            List.AddItem(task);
+            TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
+            TaskFrame.IsVisible = false;
+        }
+
+        void DismissApptButton_Clicked(System.Object sender, System.EventArgs e)
         {
             ApptFrame.IsVisible = false;
+            ApptName.Text = "";
+            ApptDescription.Text = "";
+            ApptPriorityPicker.SelectedIndex = -1;
+            ApptStartDatePicker.Date = DateTime.Today;
+            ApptStartTimePicker.Time = DateTime.Today.TimeOfDay;
+            ApptEndDatePicker.Date = DateTime.Today;
+            ApptEndTimePicker.Time = DateTime.Today.TimeOfDay;
+            OnPropertyChanged("AttendeeList");
+            AttendeeList.Clear();
+        }
+
+        void DismissTaskButton_Clicked(System.Object sender, System.EventArgs e)
+        {
             TaskFrame.IsVisible = false;
+            TaskName.Text = "";
+            TaskDescription.Text = "";
+            TaskPriorityPicker.SelectedIndex = -1;
+            TaskDatePicker.Date = DateTime.Today;
+            TaskTimePicker.Time = DateTime.Today.TimeOfDay;
+        }
+
+        void AttendeeEntry_Completed(System.Object sender, System.EventArgs e)
+        {
+            string name = AttendeeEntry.Text;
+            if (name.Contains(','))
+            {
+                string[] nameList = name.Split(',');
+                foreach(string n in nameList)
+                {
+                    string trimmedStr = n.Trim();
+                    OnPropertyChanged("AttendeeList");
+                    AttendeeList.Add(trimmedStr);
+                }
+            }
+            else
+            {
+                OnPropertyChanged("AttendeeList");
+                AttendeeList.Add(name.Trim());
+            }
+            AttendeeEntry.Text = "";
+        }
+
+        void Attendees_SelectionChanged(System.Object sender, Xamarin.Forms.SelectionChangedEventArgs e)
+        {
+            var selectedName = e.CurrentSelection.FirstOrDefault() as string;
+            if (selectedName != null)
+            {
+                OnPropertyChanged("AttendeeList");
+                AttendeeList.Remove(selectedName);
+            }
+            AttendeeCV.SelectedItem = null;
         }
     }
 }

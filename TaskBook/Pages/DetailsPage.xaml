@@ -18,7 +18,7 @@
             Completed="SearchEntry_Completed"/>
         <ScrollView x:Name="TaskFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
-                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissButton_Clicked"/>
+                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissTaskButton_Clicked"/>
                 <Label Text="Task Creator" FontSize="Title" TextColor="AliceBlue"/>
                 <Entry x:Name="TaskName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="TaskDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
@@ -31,12 +31,12 @@
                 <Label Text="Deadline:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
                 <DatePicker x:Name="TaskDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
                 <TimePicker x:Name="TaskTimePicker"/>
-                <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
+                <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateTaskButton_Clicked"/>
             </StackLayout>
         </ScrollView>
         <ScrollView x:Name="ApptFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
-                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissButton_Clicked"/>
+                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissApptButton_Clicked"/>
                 <Label Text="Appointment Creator" FontSize="Title" TextColor="AliceBlue"/>
                 <Entry x:Name="ApptName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="ApptDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
@@ -52,6 +52,18 @@
                 <Label Text="End Date:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
                 <DatePicker x:Name="ApptEndDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
                 <TimePicker x:Name="ApptEndTimePicker"/>
+                <Entry x:Name="AttendeeEntry" Placeholder="Enter Attendee name here..." Completed="AttendeeEntry_Completed" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
+                <CollectionView x:Name="AttendeeCV" SelectionMode="Single" SelectionChanged="Attendees_SelectionChanged" ItemsSource="{Binding AttendeeList}" HeightRequest="300">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="SlateGray" BorderColor="Black">
+                                <Label Text="{Binding .}"
+                                       FontAttributes="Bold"
+                                       TextColor="AliceBlue"/>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
                 <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
             </StackLayout>
         </ScrollView>
