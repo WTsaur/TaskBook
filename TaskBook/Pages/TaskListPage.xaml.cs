@@ -17,11 +17,6 @@ namespace TaskBook.Pages
             BindingContext = this;
         }
 
-        void SearchEntry_Completed(System.Object sender, System.EventArgs e)
-        {
-
-        }
-
         async void TasklistCV_SelectionChanged(System.Object sender, Xamarin.Forms.SelectionChangedEventArgs e)
         {
             var selectedItem = e.CurrentSelection.FirstOrDefault() as Models.TaskList;
@@ -37,6 +32,10 @@ namespace TaskBook.Pages
             var itemToDelete = ((SwipeItem)sender).BindingContext as Models.TaskList;
             OnPropertyChanged("TaskLists");
             TaskLists.Remove(itemToDelete);
+            if (SearchBar.Text.Length != 0)
+            {
+                TasklistCV.ItemsSource = SearchFor(SearchBar.Text);
+            }
         }
 
         async void CreateButton_Clicked(System.Object sender, System.EventArgs e)
@@ -47,6 +46,25 @@ namespace TaskBook.Pages
                 OnPropertyChanged("TaskLists");
                 TaskLists.Add(new Models.TaskList { Name = result.Trim() });
             }
+        }
+
+        void SearchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
+        {
+            SearchBar searchBar = (SearchBar)sender;
+            TasklistCV.ItemsSource = SearchFor(searchBar.Text);
+        }
+
+        public ObservableCollection<Models.TaskList> SearchFor(String str)
+        {
+            if (str.Trim().Length == 0)
+            {
+                return TaskLists;
+            }
+            var results = from list in TaskLists
+                          where list.Name.ToLower().Contains(str.ToLower())
+                          select list;
+            ObservableCollection<Models.TaskList> filteredItems = new ObservableCollection<Models.TaskList>(results.ToList());
+            return filteredItems;
         }
     }
 }

@@ -25,6 +25,11 @@ namespace TaskBook.Models
 
         public ObservableCollection<Item> SearchFor(String str)
         {
+            if (str.Length == 0)
+            {
+                return Items;
+            }
+            str = str.ToLower();
             var results = from item in Items
                           where item.Name.ToLower().Contains(str) || item.Description.ToLower().Contains(str)
                           || ((item is Appointment) && ((Appointment)item).Attendees.Contains(str))

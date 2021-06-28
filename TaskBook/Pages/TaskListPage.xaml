@@ -15,10 +15,13 @@
         <Label Text="Task Lists"
                FontSize="Title"
                Padding="20,20,20,5"/>
-        <Entry x:Name="SearchEntry"
-            Placeholder="Search..."
-            Margin="20,0,30,10"
-            Completed="SearchEntry_Completed"/>
+        <SearchBar x:Name="SearchBar"
+                   Placeholder="Search..."
+                   Margin="20,0,30,10"
+                   TextChanged="SearchBar_TextChanged"
+                   PlaceholderColor="LightGray"
+                   TextColor="Black"
+                   BackgroundColor="White"/>
         <CollectionView
             x:Name="TasklistCV"
             ItemsSource="{Binding TaskLists}"

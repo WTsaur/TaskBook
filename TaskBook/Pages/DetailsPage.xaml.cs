@@ -22,9 +22,16 @@ namespace TaskBook.Pages
             BindingContext = this;
         }
 
-        void SearchEntry_Completed(System.Object sender, System.EventArgs e)
+        void SearchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
         {
-
+            SearchBar searchBar = (SearchBar)sender;
+            if (searchBar.Text.Length == 0)
+            {
+                TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
+                AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
+            }
+            TaskCV.ItemsSource = List.SearchFor(searchBar.Text).Where(item => item is Models.Task);
+            AppointmentCV.ItemsSource = List.SearchFor(searchBar.Text).Where(item => item is Models.Appointment);
         }
 
         void DeleteSwipeItem_Invoked(System.Object sender, System.EventArgs e)
@@ -34,11 +41,25 @@ namespace TaskBook.Pages
             List.RemoveItem(itemToDelete);
             if (itemToDelete is Models.Task)
             {
-                TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
+                if (SearchBar.Text.Length == 0)
+                {
+                    TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
+                }
+                else
+                {
+                    TaskCV.ItemsSource = List.SearchFor(SearchBar.Text).Where(item => item is Models.Task);
+                }
             }
             else
             {
-                AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
+                if (SearchBar.Text.Length == 0)
+                {
+                    AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
+                }
+                else
+                {
+                    AppointmentCV.ItemsSource = List.SearchFor(SearchBar.Text).Where(item => item is Models.Appointment);
+                }
             }
         }
 
@@ -60,7 +81,7 @@ namespace TaskBook.Pages
         async void CreateApptButton_Clicked(System.Object sender, System.EventArgs e)
         {
             Models.Appointment appointment = new Models.Appointment();
-            if (ApptName.Text == null)
+            if (ApptName.Text == null || ApptName.Text.Trim().Length == 0)
             {
                 await DisplayAlert("Uh oh!", "Please enter a name for the task", "OK");
             }
@@ -89,7 +110,7 @@ namespace TaskBook.Pages
         async void CreateTaskButton_Clicked(System.Object sender, System.EventArgs e)
         {
             Models.Task task = new Models.Task();
-            if (TaskName.Text == null)
+            if (TaskName.Text == null || TaskName.Text.Trim().Length == 0)
             {
                 await DisplayAlert("Uh oh!", "Please enter a name for the task", "OK");
                 return;
@@ -175,6 +196,23 @@ namespace TaskBook.Pages
             ApptEndTimePicker.Time = DateTime.Today.TimeOfDay;
             OnPropertyChanged("AttendeeList");
             AttendeeList.Clear();
+        }
+
+        async void TaskCV_SelectionChanged(System.Object sender, Xamarin.Forms.SelectionChangedEventArgs e)
+        {
+            var selectedItem = e.CurrentSelection.FirstOrDefault() as Models.Item;
+            if (selectedItem != null)
+            {
+                await DisplayAlert("", selectedItem.ToString(), "OK");
+            }
+            TaskCV.SelectedItem = null;
+            AppointmentCV.SelectedItem = null;
+        }
+
+        void AppointmentCV_SelectionChanged(System.Object sender, Xamarin.Forms.SelectionChangedEventArgs e)
+        {
+            var selectedAppt = e.CurrentSelection.FirstOrDefault() as Models.Appointment;
+
         }
     }
 }

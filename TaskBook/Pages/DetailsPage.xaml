@@ -12,59 +12,62 @@
                 TextColor="White"
                 FontSize="36"/>
         </Frame>
-        <Entry x:Name="SearchEntry"
-            Placeholder="Search..."
-            Margin="20,0,30,10"
-            Completed="SearchEntry_Completed"/>
+                <SearchBar x:Name="SearchBar"
+                   Placeholder="Search..."
+                   Margin="20,0,30,10"
+                   TextChanged="SearchBar_TextChanged"
+                   PlaceholderColor="LightGray"
+                   TextColor="Black"
+                   BackgroundColor="White"/>
         <ScrollView x:Name="TaskFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
                 <Button Text="X" BackgroundColor="Red" Clicked="DismissTaskButton_Clicked"/>
-                <Label Text="Task Creator" FontSize="Title" TextColor="AliceBlue"/>
-                <Entry x:Name="TaskName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
-                <Entry x:Name="TaskDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
-                <Picker x:Name="TaskPriorityPicker" Title="Priority" TitleColor="AliceBlue" HorizontalOptions="FillAndExpand">
+                <Label Text="Task Creator" FontSize="Title" TextColor="White"/>
+                <Entry x:Name="TaskName" Placeholder="Name" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Entry x:Name="TaskDescription" Placeholder="Description" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Picker x:Name="TaskPriorityPicker" Title="Priority" TitleColor="White" HorizontalOptions="FillAndExpand">
                     <Picker.Items>
                         <x:String>High</x:String>
                         <x:String>Low</x:String>
                     </Picker.Items>
                 </Picker>
-                <Label Text="Deadline:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
-                <DatePicker x:Name="TaskDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
+                <Label Text="Deadline:" FontSize="20" TextColor="White" Margin="0,10,0,0"/>
+                <DatePicker x:Name="TaskDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="White"/>
                 <TimePicker x:Name="TaskTimePicker"/>
-                <Button Text="Create" BackgroundColor="Green" TextColor="AliceBlue" Clicked="CreateTaskButton_Clicked"/>
+                <Button Text="Create" BackgroundColor="Green" TextColor="White" Clicked="CreateTaskButton_Clicked"/>
             </StackLayout>
         </ScrollView>
         <ScrollView x:Name="ApptFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
                 <Button Text="X" BackgroundColor="Red" Clicked="DismissApptButton_Clicked"/>
-                <Label Text="Appointment Creator" FontSize="Title" TextColor="AliceBlue"/>
-                <Entry x:Name="ApptName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
-                <Entry x:Name="ApptDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
-                <Picker x:Name="ApptPriorityPicker" Title="Priority" TitleColor="AliceBlue" HorizontalOptions="FillAndExpand">
+                <Label Text="Appointment Creator" FontSize="Title" TextColor="White"/>
+                <Entry x:Name="ApptName" Placeholder="Name" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Entry x:Name="ApptDescription" Placeholder="Description" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Picker x:Name="ApptPriorityPicker" Title="Priority" TitleColor="White" HorizontalOptions="FillAndExpand">
                     <Picker.Items>
                         <x:String>High</x:String>
                         <x:String>Low</x:String>
                     </Picker.Items>
                 </Picker>
-                <Label Text="Start Date:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
-                <DatePicker x:Name="ApptStartDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
+                <Label Text="Start Date:" FontSize="20" TextColor="White" Margin="0,10,0,0"/>
+                <DatePicker x:Name="ApptStartDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="White"/>
                 <TimePicker x:Name="ApptStartTimePicker"/>
-                <Label Text="End Date:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
-                <DatePicker x:Name="ApptEndDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
+                <Label Text="End Date:" FontSize="20" TextColor="White" Margin="0,10,0,0"/>
+                <DatePicker x:Name="ApptEndDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="White"/>
                 <TimePicker x:Name="ApptEndTimePicker"/>
-                <Entry x:Name="AttendeeEntry" Placeholder="Enter Attendee name here..." Completed="AttendeeEntry_Completed" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
+                <Entry x:Name="AttendeeEntry" Placeholder="Enter Attendee name here..." Completed="AttendeeEntry_Completed" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
                 <CollectionView x:Name="AttendeeCV" SelectionMode="Single" SelectionChanged="Attendees_SelectionChanged" ItemsSource="{Binding AttendeeList}" HeightRequest="300">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame BackgroundColor="SlateGray" BorderColor="Black">
                                 <Label Text="{Binding .}"
                                        FontAttributes="Bold"
-                                       TextColor="AliceBlue"/>
+                                       TextColor="White"/>
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button Text="Create" BackgroundColor="Green" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
+                <Button Text="Create" BackgroundColor="Green" TextColor="White" Clicked="CreateApptButton_Clicked"/>
             </StackLayout>
         </ScrollView>
         <Label Text="Tasks"
@@ -72,8 +75,9 @@
                Padding="20,20,20,5"/>
         <CollectionView
             x:Name="TaskCV"
-            SelectionMode="None"
-            Margin="10">
+            SelectionMode="Single"
+            Margin="10"
+            SelectionChanged="TaskCV_SelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
@@ -97,8 +101,9 @@
                Padding="20,20,20,5"/>
         <CollectionView
             x:Name="AppointmentCV"
-            SelectionMode="None"
-            Margin="10">
+            SelectionMode="Single"
+            Margin="10"
+            SelectionChanged="TaskCV_SelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
