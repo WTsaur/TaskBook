@@ -18,32 +18,32 @@
             Completed="SearchEntry_Completed"/>
         <ScrollView x:Name="TaskFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
-                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissTaskButton_Clicked"/>
+                <Button Text="X" BackgroundColor="Red" Clicked="DismissTaskButton_Clicked"/>
                 <Label Text="Task Creator" FontSize="Title" TextColor="AliceBlue"/>
                 <Entry x:Name="TaskName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="TaskDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Picker x:Name="TaskPriorityPicker" Title="Priority" TitleColor="AliceBlue" HorizontalOptions="FillAndExpand">
                     <Picker.Items>
-                        <x:String>High Priority</x:String>
-                        <x:String>Low Priority</x:String>
+                        <x:String>High</x:String>
+                        <x:String>Low</x:String>
                     </Picker.Items>
                 </Picker>
                 <Label Text="Deadline:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
                 <DatePicker x:Name="TaskDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="AliceBlue"/>
                 <TimePicker x:Name="TaskTimePicker"/>
-                <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateTaskButton_Clicked"/>
+                <Button Text="Create" BackgroundColor="Green" TextColor="AliceBlue" Clicked="CreateTaskButton_Clicked"/>
             </StackLayout>
         </ScrollView>
         <ScrollView x:Name="ApptFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
-                <Button Text="X" BackgroundColor="#2196F3" Clicked="DismissApptButton_Clicked"/>
+                <Button Text="X" BackgroundColor="Red" Clicked="DismissApptButton_Clicked"/>
                 <Label Text="Appointment Creator" FontSize="Title" TextColor="AliceBlue"/>
                 <Entry x:Name="ApptName" Placeholder="Name" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="ApptDescription" Placeholder="Description" BackgroundColor="AliceBlue" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Picker x:Name="ApptPriorityPicker" Title="Priority" TitleColor="AliceBlue" HorizontalOptions="FillAndExpand">
                     <Picker.Items>
-                        <x:String>High Priority</x:String>
-                        <x:String>Low Priority</x:String>
+                        <x:String>High</x:String>
+                        <x:String>Low</x:String>
                     </Picker.Items>
                 </Picker>
                 <Label Text="Start Date:" FontSize="20" TextColor="AliceBlue" Margin="0,10,0,0"/>
@@ -64,7 +64,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button Text="Create" BackgroundColor="LimeGreen" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
+                <Button Text="Create" BackgroundColor="Green" TextColor="AliceBlue" Clicked="CreateApptButton_Clicked"/>
             </StackLayout>
         </ScrollView>
         <Label Text="Tasks"
@@ -127,6 +127,6 @@
                 VerticalOptions="Center"
                 HorizontalOptions="End"
                 Margin="30"
-                Clicked="CreateButton_Clicked"/>
+                Clicked="AddButton_Clicked"/>
     </StackLayout>
 </ContentPage>

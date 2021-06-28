@@ -42,7 +42,7 @@ namespace TaskBook.Pages
             }
         }
 
-        async void CreateButton_Clicked(System.Object sender, System.EventArgs e)
+        async void AddButton_Clicked(System.Object sender, System.EventArgs e)
         {
             string action = await DisplayActionSheet("Pick an item to create", "Cancel", null, "Task", "Appointment");
             if (action == "Task")
@@ -57,12 +57,19 @@ namespace TaskBook.Pages
             }
         }
 
-        void CreateApptButton_Clicked(System.Object sender, System.EventArgs e)
+        async void CreateApptButton_Clicked(System.Object sender, System.EventArgs e)
         {
             Models.Appointment appointment = new Models.Appointment();
-            appointment.Name = ApptName.Text.Trim();
-            appointment.Description = ApptDescription.Text.Trim();
-            appointment.Priority = ApptPriorityPicker.SelectedItem.ToString();
+            if (ApptName.Text == null)
+            {
+                await DisplayAlert("Uh oh!", "Please enter a name for the task", "OK");
+            }
+            else
+            {
+                appointment.Name = ApptName.Text.Trim();
+            }
+            appointment.Description = ApptDescription.Text?.Trim() ?? "";
+            appointment.Priority = ApptPriorityPicker.SelectedItem?.ToString() ?? "Low";
             DateTime startDate = ApptStartDatePicker.Date;
             TimeSpan startTime = ApptStartTimePicker.Time;
             DateTime startDateTime = new DateTime(startDate.Year, startDate.Month, startDate.Day, startTime.Hours, startTime.Minutes, startTime.Seconds);
@@ -75,15 +82,24 @@ namespace TaskBook.Pages
             OnPropertyChanged("List");
             List.AddItem(appointment);
             AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
+            ClearApptInput();
             ApptFrame.IsVisible = false;
         }
 
-        void CreateTaskButton_Clicked(System.Object sender, System.EventArgs e)
+        async void CreateTaskButton_Clicked(System.Object sender, System.EventArgs e)
         {
             Models.Task task = new Models.Task();
-            task.Name = TaskName.Text.Trim();
-            task.Description = TaskDescription.Text.Trim();
-            task.Priority = TaskPriorityPicker.SelectedItem.ToString();
+            if (TaskName.Text == null)
+            {
+                await DisplayAlert("Uh oh!", "Please enter a name for the task", "OK");
+                return;
+            }
+            else
+            {
+                task.Name = TaskName.Text.Trim();
+            }
+            task.Description = TaskDescription.Text?.Trim() ?? "";
+            task.Priority = TaskPriorityPicker.SelectedItem?.ToString() ?? "Low";
             DateTime date = TaskDatePicker.Date;
             TimeSpan time = TaskTimePicker.Time;
             DateTime deadline = new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds);
@@ -91,31 +107,20 @@ namespace TaskBook.Pages
             OnPropertyChanged("List");
             List.AddItem(task);
             TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
+            ClearTaskInput();
             TaskFrame.IsVisible = false;
         }
 
         void DismissApptButton_Clicked(System.Object sender, System.EventArgs e)
         {
             ApptFrame.IsVisible = false;
-            ApptName.Text = "";
-            ApptDescription.Text = "";
-            ApptPriorityPicker.SelectedIndex = -1;
-            ApptStartDatePicker.Date = DateTime.Today;
-            ApptStartTimePicker.Time = DateTime.Today.TimeOfDay;
-            ApptEndDatePicker.Date = DateTime.Today;
-            ApptEndTimePicker.Time = DateTime.Today.TimeOfDay;
-            OnPropertyChanged("AttendeeList");
-            AttendeeList.Clear();
+            ClearApptInput();
         }
 
         void DismissTaskButton_Clicked(System.Object sender, System.EventArgs e)
         {
             TaskFrame.IsVisible = false;
-            TaskName.Text = "";
-            TaskDescription.Text = "";
-            TaskPriorityPicker.SelectedIndex = -1;
-            TaskDatePicker.Date = DateTime.Today;
-            TaskTimePicker.Time = DateTime.Today.TimeOfDay;
+            ClearTaskInput();
         }
 
         void AttendeeEntry_Completed(System.Object sender, System.EventArgs e)
@@ -148,6 +153,28 @@ namespace TaskBook.Pages
                 AttendeeList.Remove(selectedName);
             }
             AttendeeCV.SelectedItem = null;
+        }
+
+        void ClearTaskInput()
+        {
+            TaskName.Text = "";
+            TaskDescription.Text = "";
+            TaskPriorityPicker.SelectedIndex = -1;
+            TaskDatePicker.Date = DateTime.Today;
+            TaskTimePicker.Time = DateTime.Today.TimeOfDay;
+        }
+
+        void ClearApptInput()
+        {
+            ApptName.Text = "";
+            ApptDescription.Text = "";
+            ApptPriorityPicker.SelectedIndex = -1;
+            ApptStartDatePicker.Date = DateTime.Today;
+            ApptStartTimePicker.Time = DateTime.Today.TimeOfDay;
+            ApptEndDatePicker.Date = DateTime.Today;
+            ApptEndTimePicker.Time = DateTime.Today.TimeOfDay;
+            OnPropertyChanged("AttendeeList");
+            AttendeeList.Clear();
         }
     }
 }

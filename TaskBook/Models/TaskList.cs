@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace TaskBook.Models
 {
@@ -21,6 +22,16 @@ namespace TaskBook.Models
         }
 
         public bool RemoveItem(Item item) => Items.Remove(item);
+
+        public ObservableCollection<Item> SearchFor(String str)
+        {
+            var results = from item in Items
+                          where item.Name.ToLower().Contains(str) || item.Description.ToLower().Contains(str)
+                          || ((item is Appointment) && ((Appointment)item).Attendees.Contains(str))
+                          select item;
+            ObservableCollection<Item> filteredItems = new ObservableCollection<Item>(results.ToList());
+            return filteredItems;
+        }
 
         public override string ToString()
         {
