@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -29,9 +28,9 @@ namespace TaskBook.Models
             {
                 return Items;
             }
-            str = str.ToLower();
             var results = from item in Items
-                          where item.Name.ToLower().Contains(str) || item.Description.ToLower().Contains(str)
+                          where item.Name.ToLower().Contains(str.ToLower())
+                          || item.Description.ToLower().Contains(str.ToLower())
                           || ((item is Appointment) && ((Appointment)item).Attendees.Contains(str))
                           select item;
             ObservableCollection<Item> filteredItems = new ObservableCollection<Item>(results.ToList());

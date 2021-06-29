@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
@@ -84,6 +83,7 @@ namespace TaskBook.Pages
             if (ApptName.Text == null || ApptName.Text.Trim().Length == 0)
             {
                 await DisplayAlert("Uh oh!", "Please enter a name for the task", "OK");
+                return;
             }
             else
             {
