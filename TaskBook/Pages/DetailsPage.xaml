@@ -5,24 +5,17 @@
 
     <StackLayout>
         <Frame BackgroundColor="#2196F3"
-               Padding="24"
+               Padding="5"
                CornerRadius="0">
             <Label x:Name="ListName"
                 HorizontalTextAlignment="Center"
                 TextColor="White"
                 FontSize="36"/>
         </Frame>
-                <SearchBar x:Name="SearchBar"
-                   Placeholder="Search..."
-                   Margin="20,0,30,10"
-                   TextChanged="SearchBar_TextChanged"
-                   PlaceholderColor="LightGray"
-                   TextColor="Black"
-                   BackgroundColor="White"/>
         <ScrollView x:Name="TaskFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
                 <Button Text="X" BackgroundColor="Red" Clicked="DismissTaskButton_Clicked"/>
-                <Label Text="Task Creator" FontSize="Title" TextColor="White"/>
+                <Label x:Name="TaskCreatorLabel" Text="Task Creator" FontSize="Title" TextColor="White"/>
                 <Entry x:Name="TaskName" Placeholder="Name" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="TaskDescription" Placeholder="Description" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Picker x:Name="TaskPriorityPicker" Title="Priority" TitleColor="White" HorizontalOptions="FillAndExpand">
@@ -34,13 +27,13 @@
                 <Label Text="Deadline:" FontSize="20" TextColor="White" Margin="0,10,0,0"/>
                 <DatePicker x:Name="TaskDatePicker" Visual="Material" BackgroundColor="#2196F3" TextColor="White"/>
                 <TimePicker x:Name="TaskTimePicker"/>
-                <Button Text="Create" BackgroundColor="Green" TextColor="White" Clicked="CreateTaskButton_Clicked"/>
+                <Button Text="Save" BackgroundColor="Green" TextColor="White" Clicked="CreateTaskButton_Clicked"/>
             </StackLayout>
         </ScrollView>
         <ScrollView x:Name="ApptFrame" MinimumHeightRequest="480" IsVisible="false" BackgroundColor="#2196F3" Padding="20">
             <StackLayout>
                 <Button Text="X" BackgroundColor="Red" Clicked="DismissApptButton_Clicked"/>
-                <Label Text="Appointment Creator" FontSize="Title" TextColor="White"/>
+                <Label x:Name="ApptCreatorLabel" Text="Appointment Creator" FontSize="Title" TextColor="White"/>
                 <Entry x:Name="ApptName" Placeholder="Name" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Entry x:Name="ApptDescription" Placeholder="Description" BackgroundColor="White" TextColor="Black" PlaceholderColor="LightGray"/>
                 <Picker x:Name="ApptPriorityPicker" Title="Priority" TitleColor="White" HorizontalOptions="FillAndExpand">
@@ -67,17 +60,30 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button Text="Create" BackgroundColor="Green" TextColor="White" Clicked="CreateApptButton_Clicked"/>
+                <Button Text="Save" BackgroundColor="Green" TextColor="White" Clicked="CreateApptButton_Clicked"/>
             </StackLayout>
         </ScrollView>
+        <Picker x:Name="FilterPicker" Margin="10" Title="Filter By Priority" TitleColor="White" HorizontalOptions="FillAndExpand" SelectedIndexChanged="FilterPicker_SelectedIndexChanged">
+            <Picker.Items>
+                <x:String>None</x:String>
+                <x:String>High</x:String>
+                <x:String>Low</x:String>
+            </Picker.Items>
+        </Picker>
+        <SearchBar x:Name="SearchBar"
+            Placeholder="Search..."
+            Margin="10"
+            TextChanged="SearchBar_TextChanged"
+            PlaceholderColor="LightGray"
+            TextColor="Black"
+            BackgroundColor="White"/>
         <Label Text="Tasks"
                FontSize="Subtitle"
                Padding="20,20,20,5"/>
         <CollectionView
             x:Name="TaskCV"
-            SelectionMode="Single"
-            Margin="10"
-            SelectionChanged="TaskCV_SelectionChanged">
+            SelectionMode="None"
+            Margin="10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
@@ -86,11 +92,20 @@
                             <SwipeItem Text="Delete"
                                        BackgroundColor="Red"
                                        Invoked="DeleteSwipeItem_Invoked"/>
+                            <SwipeItem Text="Edit"
+                                       BackgroundColor="SeaGreen"
+                                       Invoked="EditSwipeItem_Invoked"/>
                         </SwipeItems>
                     </SwipeView.RightItems>
-                    <Frame BackgroundColor="SlateGray" BorderColor="Black">
-                        <Label Text="{Binding Name}"
-                               FontAttributes="Bold"/>
+                    <Frame BackgroundColor="{Binding BgColor}" BorderColor="Black">
+                        <StackLayout Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsCompleted}"/>
+                            <Button Text="{Binding Name}"
+                                    FontAttributes="Bold"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="Transparent"
+                                    Clicked="DetailButton_Clicked"/>
+                        </StackLayout>
                     </Frame>
                 </SwipeView>
                 </DataTemplate>
@@ -101,9 +116,8 @@
                Padding="20,20,20,5"/>
         <CollectionView
             x:Name="AppointmentCV"
-            SelectionMode="Single"
-            Margin="10"
-            SelectionChanged="TaskCV_SelectionChanged">
+            SelectionMode="None"
+            Margin="10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
@@ -112,11 +126,18 @@
                             <SwipeItem Text="Delete"
                                        BackgroundColor="Red"
                                        Invoked="DeleteSwipeItem_Invoked"/>
+                            <SwipeItem Text="Edit"
+                                       BackgroundColor="SeaGreen"
+                                       Invoked="EditSwipeItem_Invoked"/>
                         </SwipeItems>
                     </SwipeView.RightItems>
-                    <Frame BackgroundColor="SlateGray" BorderColor="Black">
-                        <Label Text="{Binding Name}"
-                               FontAttributes="Bold"/>
+                    <Frame BackgroundColor="{Binding BgColor}" BorderColor="Black">
+                        <Button Text="{Binding Name}"
+                                    FontAttributes="Bold"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Start"
+                                    BackgroundColor="Transparent"
+                                    Clicked="DetailButton_Clicked"/>
                     </Frame>
                 </SwipeView>
                 </DataTemplate>

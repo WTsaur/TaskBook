@@ -19,11 +19,13 @@
     <None Remove="Models\" />
     <None Remove="Pages\" />
     <None Remove="Xamarin.Forms.Visual.Material" />
-    <None Remove="Data\" />
+    <None Remove="sqlite-net-pcl" />
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="SQLiteNetExtensions" />
+    <None Remove="SQLiteNetExtensionsCore" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Pages\" />
-    <Folder Include="Data\" />
   </ItemGroup>
 </Project>

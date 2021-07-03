@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace TaskBook.Pages
         public TaskListPage()
         {
             InitializeComponent();
-            TaskLists = new ObservableCollection<Models.TaskList> { new Models.TaskList { Name = "Test", Items = new ObservableCollection<Models.Item> { new Models.Task { Name = "task 1" }, new Models.Appointment { Name = "appointment 1" } } } };
+            TaskLists = new ObservableCollection<Models.TaskList> { new Models.TaskList { Name = "Test", Items = new List<Models.Item> { new Models.Task { Name = "task 1" }, new Models.Appointment { Name = "appointment 1" } } } };
             BindingContext = this;
         }
 
@@ -31,7 +32,7 @@ namespace TaskBook.Pages
             var itemToDelete = ((SwipeItem)sender).BindingContext as Models.TaskList;
             OnPropertyChanged("TaskLists");
             TaskLists.Remove(itemToDelete);
-            if (SearchBar.Text.Length != 0)
+            if (SearchBar.Text != null && SearchBar.Text.Length != 0)
             {
                 TasklistCV.ItemsSource = SearchFor(SearchBar.Text);
             }
