@@ -133,7 +133,7 @@ namespace TaskBook.Pages
         async void CreateApptButton_Clicked(System.Object sender,
             System.EventArgs e)
         {
-            Models.Appointment appointment = new();
+            Models.Appointment appointment = new Models.Appointment();
             int idx = 0;
             if (BeingEdited != null)
             {
@@ -160,12 +160,12 @@ namespace TaskBook.Pages
                 Constants.ItemHighPriColor : Constants.ItemLowPriColor;
             DateTime startDate = ApptStartDatePicker.Date;
             TimeSpan startTime = ApptStartTimePicker.Time;
-            DateTime startDateTime = new(startDate.Year,
+            DateTime startDateTime = new DateTime(startDate.Year,
                 startDate.Month, startDate.Day, startTime.Hours,
                 startTime.Minutes, startTime.Seconds);
             DateTime endDate = ApptEndDatePicker.Date;
             TimeSpan endTime = ApptEndTimePicker.Time;
-            DateTime endDateTime = new(endDate.Year, endDate.Month,
+            DateTime endDateTime = new DateTime(endDate.Year, endDate.Month,
                 endDate.Day, endTime.Hours, endTime.Minutes, endTime.Seconds);
             appointment.Start = startDateTime;
             appointment.Stop = endDateTime;
@@ -191,7 +191,7 @@ namespace TaskBook.Pages
         async void CreateTaskButton_Clicked(System.Object sender,
             System.EventArgs e)
         {
-            Models.Task task = new();
+            Models.Task task = new Models.Task();
             int idx = 0;
             if (BeingEdited != null)
             {
@@ -218,7 +218,7 @@ namespace TaskBook.Pages
                 Constants.ItemHighPriColor : Constants.ItemLowPriColor;
             DateTime date = TaskDatePicker.Date;
             TimeSpan time = TaskTimePicker.Time;
-            DateTime deadline = new(date.Year, date.Month,
+            DateTime deadline = new DateTime(date.Year, date.Month,
                 date.Day, time.Hours, time.Minutes, time.Seconds);
             task.Deadline = deadline;
             OnPropertyChanged("Tasks");

@@ -75,7 +75,7 @@ namespace TaskBook.Pages
                           where list.Name.ToLower().Contains(str.ToLower())
                           select list;
             ObservableCollection<Models.TaskList> filteredItems =
-                new(results.ToList());
+                new ObservableCollection<Models.TaskList>(results.ToList());
             return filteredItems;
         }
     }
