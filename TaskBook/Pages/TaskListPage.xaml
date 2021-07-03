@@ -38,7 +38,8 @@
                                    Invoked='DeleteSwipeItem_Invoked'/>
                     </SwipeItems>
                 </SwipeView.RightItems>
-                <Frame BackgroundColor="SlateGray" BorderColor="Black">
+                <Frame BackgroundColor="SlateGray"
+                       BorderColor="Black">
                     <Label Text="{Binding Name}"
                            FontAttributes="Bold"/>
                 </Frame>

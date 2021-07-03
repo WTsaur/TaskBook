@@ -12,7 +12,8 @@ namespace TaskBook.Models
 
         public override string ToString()
         {
-            CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
+            CultureInfo cultureInfo = CultureInfo
+                .CreateSpecificCulture("en-US");
             string attendees = string.Join(", ", this.Attendees);
             return $"{this.Name}" +
                 $"\n\tPriority: {Priority}" +

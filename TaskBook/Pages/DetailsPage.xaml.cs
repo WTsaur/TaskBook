@@ -22,12 +22,14 @@ namespace TaskBook.Pages
             BindingContext = this;
         }
 
-        void SearchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
+        void SearchBar_TextChanged(System.Object sender,
+            Xamarin.Forms.TextChangedEventArgs e)
         {
             SearchAndFilter();
         }
 
-        void FilterPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        void FilterPicker_SelectedIndexChanged(System.Object sender,
+            System.EventArgs e)
         {
             if (FilterPicker.SelectedIndex == -1) return;
             if (FilterPicker.SelectedIndex == 0)
@@ -45,10 +47,12 @@ namespace TaskBook.Pages
             {
                 string lowerText = SearchBar.Text.ToLower();
                 string priority = FilterPicker.SelectedItem.ToString();
-                TaskCV.ItemsSource = List.Tasks.Where(task => task.Priority == priority &&
+                TaskCV.ItemsSource = List.Tasks.Where(task =>
+                    task.Priority == priority &&
                     (task.Name.ToLower().Contains(lowerText) ||
                     task.Description.ToLower().Contains(lowerText)));
-                AppointmentCV.ItemsSource = List.Appointments.Where(appt => appt.Priority == priority &&
+                AppointmentCV.ItemsSource = List.Appointments.Where(appt =>
+                    appt.Priority == priority &&
                     (appt.Name.ToLower().Contains(lowerText) ||
                     appt.Description.ToLower().Contains(lowerText) ||
                     appt.Attendees.Contains(SearchBar.Text)));
@@ -56,17 +60,21 @@ namespace TaskBook.Pages
             else if (doSearch && !doFilter)
             {
                 string lowerText = SearchBar.Text.ToLower();
-                TaskCV.ItemsSource = List.Tasks.Where(task => task.Name.ToLower().Contains(lowerText) ||
+                TaskCV.ItemsSource = List.Tasks.Where(task =>
+                    task.Name.ToLower().Contains(lowerText) ||
                     task.Description.ToLower().Contains(lowerText));
-                AppointmentCV.ItemsSource = List.Appointments.Where(appt => appt.Name.ToLower().Contains(lowerText) ||
+                AppointmentCV.ItemsSource = List.Appointments.Where(appt =>
+                    appt.Name.ToLower().Contains(lowerText) ||
                     appt.Description.ToLower().Contains(lowerText) ||
                     appt.Attendees.Contains(SearchBar.Text));
             }
             else if (!doSearch && doFilter)
             {
                 string priority = FilterPicker.SelectedItem.ToString();
-                TaskCV.ItemsSource = List.Tasks.Where(task => task.Priority == priority);
-                AppointmentCV.ItemsSource = List.Appointments.Where(appt => appt.Priority == priority);
+                TaskCV.ItemsSource = List.Tasks.Where(task =>
+                    task.Priority == priority);
+                AppointmentCV.ItemsSource = List.Appointments.Where(appt =>
+                    appt.Priority == priority);
             }
             else
             {
@@ -90,7 +98,8 @@ namespace TaskBook.Pages
 
         void DeleteSwipeItem_Invoked(System.Object sender, System.EventArgs e)
         {
-            var itemToDelete = ((SwipeItem)sender).BindingContext as Models.Item;
+            var itemToDelete = ((SwipeItem)sender)
+                .BindingContext as Models.Item;
             if (itemToDelete is Models.Task)
             {
                 OnPropertyChanged("Tasks");
@@ -107,7 +116,8 @@ namespace TaskBook.Pages
 
         async void AddButton_Clicked(System.Object sender, System.EventArgs e)
         {
-            string action = await DisplayActionSheet("Pick an item to create", "Cancel", null, "Task", "Appointment");
+            string action = await DisplayActionSheet("Pick an item to create",
+                "Cancel", null, "Task", "Appointment");
             if (action == "Task")
             {
                 ApptFrame.IsVisible = false;
@@ -120,9 +130,10 @@ namespace TaskBook.Pages
             }
         }
 
-        async void CreateApptButton_Clicked(System.Object sender, System.EventArgs e)
+        async void CreateApptButton_Clicked(System.Object sender,
+            System.EventArgs e)
         {
-            Models.Appointment appointment = new Models.Appointment();
+            Models.Appointment appointment = new();
             int idx = 0;
             if (BeingEdited != null)
             {
@@ -134,7 +145,8 @@ namespace TaskBook.Pages
             }
             if (ApptName.Text == null || ApptName.Text.Trim().Length == 0)
             {
-                await DisplayAlert("Uh oh!", "Please enter a name for the task", "OK");
+                await DisplayAlert("Uh oh!", "Please enter a name for the task",
+                    "OK");
                 return;
             }
             else
@@ -142,14 +154,19 @@ namespace TaskBook.Pages
                 appointment.Name = ApptName.Text.Trim();
             }
             appointment.Description = ApptDescription.Text?.Trim() ?? "";
-            appointment.Priority = ApptPriorityPicker.SelectedItem?.ToString() ?? "Low";
-            appointment.BgColor = appointment.Priority.Equals("High") ? Constants.ItemHighPriColor : Constants.ItemLowPriColor;
+            appointment.Priority = ApptPriorityPicker
+                .SelectedItem?.ToString() ?? "Low";
+            appointment.BgColor = appointment.Priority.Equals("High") ?
+                Constants.ItemHighPriColor : Constants.ItemLowPriColor;
             DateTime startDate = ApptStartDatePicker.Date;
             TimeSpan startTime = ApptStartTimePicker.Time;
-            DateTime startDateTime = new DateTime(startDate.Year, startDate.Month, startDate.Day, startTime.Hours, startTime.Minutes, startTime.Seconds);
+            DateTime startDateTime = new(startDate.Year,
+                startDate.Month, startDate.Day, startTime.Hours,
+                startTime.Minutes, startTime.Seconds);
             DateTime endDate = ApptEndDatePicker.Date;
             TimeSpan endTime = ApptEndTimePicker.Time;
-            DateTime endDateTime = new DateTime(endDate.Year, endDate.Month, endDate.Day, endTime.Hours, endTime.Minutes, endTime.Seconds);
+            DateTime endDateTime = new(endDate.Year, endDate.Month,
+                endDate.Day, endTime.Hours, endTime.Minutes, endTime.Seconds);
             appointment.Start = startDateTime;
             appointment.Stop = endDateTime;
             appointment.Attendees = AttendeeList.ToList();
@@ -171,9 +188,10 @@ namespace TaskBook.Pages
             ApptFrame.IsVisible = false;
         }
 
-        async void CreateTaskButton_Clicked(System.Object sender, System.EventArgs e)
+        async void CreateTaskButton_Clicked(System.Object sender,
+            System.EventArgs e)
         {
-            Models.Task task = new Models.Task();
+            Models.Task task = new();
             int idx = 0;
             if (BeingEdited != null)
             {
@@ -185,7 +203,8 @@ namespace TaskBook.Pages
             }
             if (TaskName.Text == null || TaskName.Text.Trim().Length == 0)
             {
-                await DisplayAlert("Uh oh!", "Please enter a name for the task", "OK");
+                await DisplayAlert("Uh oh!", "Please enter a name for the task",
+                    "OK");
                 return;
             }
             else
@@ -193,11 +212,14 @@ namespace TaskBook.Pages
                 task.Name = TaskName.Text.Trim();
             }
             task.Description = TaskDescription.Text?.Trim() ?? "";
-            task.Priority = TaskPriorityPicker.SelectedItem?.ToString() ?? "Low";
-            task.BgColor = task.Priority.Equals("High") ? Constants.ItemHighPriColor : Constants.ItemLowPriColor;
+            task.Priority = TaskPriorityPicker.SelectedItem?.ToString() ??
+                "Low";
+            task.BgColor = task.Priority.Equals("High") ?
+                Constants.ItemHighPriColor : Constants.ItemLowPriColor;
             DateTime date = TaskDatePicker.Date;
             TimeSpan time = TaskTimePicker.Time;
-            DateTime deadline = new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds);
+            DateTime deadline = new(date.Year, date.Month,
+                date.Day, time.Hours, time.Minutes, time.Seconds);
             task.Deadline = deadline;
             OnPropertyChanged("Tasks");
             if (BeingEdited == null)
@@ -250,7 +272,8 @@ namespace TaskBook.Pages
             AttendeeEntry.Text = "";
         }
 
-        void Attendees_SelectionChanged(System.Object sender, Xamarin.Forms.SelectionChangedEventArgs e)
+        void Attendees_SelectionChanged(System.Object sender,
+            Xamarin.Forms.SelectionChangedEventArgs e)
         {
             var selectedName = e.CurrentSelection.FirstOrDefault() as string;
             if (selectedName != null)
@@ -316,7 +339,8 @@ namespace TaskBook.Pages
             }
         }
 
-        async void DetailButton_Clicked(System.Object sender, System.EventArgs e)
+        async void DetailButton_Clicked(System.Object sender,
+            System.EventArgs e)
         {
             var item = ((Button)sender).BindingContext as Models.Item;
             if (item != null)

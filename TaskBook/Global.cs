@@ -14,7 +14,8 @@ namespace TaskBook
             if (Preferences.ContainsKey(Constants.DataKey))
             {
                 string json = Preferences.Get(Constants.DataKey, "[]");
-                List<Models.TaskList> jsonList = JsonConvert.DeserializeObject<List<Models.TaskList>>(json);
+                List<Models.TaskList> jsonList = JsonConvert
+                    .DeserializeObject<List<Models.TaskList>>(json);
                 Data = new ObservableCollection<Models.TaskList>(jsonList);
             }
             else
