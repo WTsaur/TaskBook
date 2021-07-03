@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace TaskBook
 {
@@ -10,7 +8,7 @@ namespace TaskBook
         public App()
         {
             InitializeComponent();
-
+            Global.Init();
             MainPage = new NavigationPage(new TaskBook.Pages.TaskListPage());
         }
 

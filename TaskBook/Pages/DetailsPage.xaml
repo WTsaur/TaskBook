@@ -82,6 +82,7 @@
                Padding="20,20,20,5"/>
         <CollectionView
             x:Name="TaskCV"
+            ItemsSource="{Binding Tasks}"
             SelectionMode="None"
             Margin="10">
             <CollectionView.ItemTemplate>
@@ -99,7 +100,7 @@
                     </SwipeView.RightItems>
                     <Frame BackgroundColor="{Binding BgColor}" BorderColor="Black">
                         <StackLayout Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsCompleted}"/>
+                            <CheckBox IsChecked="{Binding IsCompleted}" CheckedChanged="OnCheckBoxCheckedChanged"/>
                             <Button Text="{Binding Name}"
                                     FontAttributes="Bold"
                                     VerticalOptions="Center"
@@ -116,6 +117,7 @@
                Padding="20,20,20,5"/>
         <CollectionView
             x:Name="AppointmentCV"
+            ItemsSource="{Binding Appointments}"
             SelectionMode="None"
             Margin="10">
             <CollectionView.ItemTemplate>

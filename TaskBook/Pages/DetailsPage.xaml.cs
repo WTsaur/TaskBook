@@ -15,54 +15,63 @@ namespace TaskBook.Pages
         {
             InitializeComponent();
             List = list;
-            ListName.Text = list.Name;
-            TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
-            AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
+            ListName.Text = List.Name;
+            TaskCV.ItemsSource = List.Tasks;
+            AppointmentCV.ItemsSource = List.Appointments;
             AttendeeList = new ObservableCollection<string>();
             BindingContext = this;
         }
 
         void SearchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
         {
-            SearchBar searchBar = (SearchBar)sender;
-            Models.TaskList filteredList = new Models.TaskList();
-            if (searchBar.Text == null || searchBar.Text.Length == 0)
-            {
-                TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
-                AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
-            }
-            if (FilterPicker.SelectedIndex > -1)
-            {
-                filteredList.Items = List.FilterByPriority(FilterPicker.SelectedItem.ToString());
-                TaskCV.ItemsSource = filteredList.SearchFor(searchBar.Text).Where(item => item is Models.Task);
-                AppointmentCV.ItemsSource = filteredList.SearchFor(searchBar.Text).Where(item => item is Models.Appointment);
-            }
-            else
-            {
-                TaskCV.ItemsSource = List.SearchFor(searchBar.Text).Where(item => item is Models.Task);
-                AppointmentCV.ItemsSource = List.SearchFor(searchBar.Text).Where(item => item is Models.Appointment);
-            }
+            SearchAndFilter();
         }
 
         void FilterPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
         {
             if (FilterPicker.SelectedIndex == -1) return;
-            string priority = FilterPicker.SelectedItem.ToString();
-            Models.TaskList filteredList = new Models.TaskList();
             if (FilterPicker.SelectedIndex == 0)
             {
                 FilterPicker.SelectedIndex = -1;
             }
-            if (SearchBar.Text != null)
+            SearchAndFilter();
+        }
+
+        void SearchAndFilter()
+        {
+            bool doSearch = SearchBar.Text != null && SearchBar.Text.Length > 0;
+            bool doFilter = FilterPicker.SelectedIndex > 0;
+            if (doSearch && doFilter)
             {
-                filteredList.Items = List.SearchFor(SearchBar.Text);
-                TaskCV.ItemsSource = filteredList.FilterByPriority(priority).Where(item => item is Models.Task);
-                AppointmentCV.ItemsSource = filteredList.FilterByPriority(priority).Where(item => item is Models.Appointment);
+                string lowerText = SearchBar.Text.ToLower();
+                string priority = FilterPicker.SelectedItem.ToString();
+                TaskCV.ItemsSource = List.Tasks.Where(task => task.Priority == priority &&
+                    (task.Name.ToLower().Contains(lowerText) ||
+                    task.Description.ToLower().Contains(lowerText)));
+                AppointmentCV.ItemsSource = List.Appointments.Where(appt => appt.Priority == priority &&
+                    (appt.Name.ToLower().Contains(lowerText) ||
+                    appt.Description.ToLower().Contains(lowerText) ||
+                    appt.Attendees.Contains(SearchBar.Text)));
+            }
+            else if (doSearch && !doFilter)
+            {
+                string lowerText = SearchBar.Text.ToLower();
+                TaskCV.ItemsSource = List.Tasks.Where(task => task.Name.ToLower().Contains(lowerText) ||
+                    task.Description.ToLower().Contains(lowerText));
+                AppointmentCV.ItemsSource = List.Appointments.Where(appt => appt.Name.ToLower().Contains(lowerText) ||
+                    appt.Description.ToLower().Contains(lowerText) ||
+                    appt.Attendees.Contains(SearchBar.Text));
+            }
+            else if (!doSearch && doFilter)
+            {
+                string priority = FilterPicker.SelectedItem.ToString();
+                TaskCV.ItemsSource = List.Tasks.Where(task => task.Priority == priority);
+                AppointmentCV.ItemsSource = List.Appointments.Where(appt => appt.Priority == priority);
             }
             else
             {
-                TaskCV.ItemsSource = List.FilterByPriority(priority).Where(item => item is Models.Task);
-                AppointmentCV.ItemsSource = List.FilterByPriority(priority).Where(item => item is Models.Appointment);
+                TaskCV.ItemsSource = List.Tasks;
+                AppointmentCV.ItemsSource = List.Appointments;
             }
         }
 
@@ -82,40 +91,23 @@ namespace TaskBook.Pages
         void DeleteSwipeItem_Invoked(System.Object sender, System.EventArgs e)
         {
             var itemToDelete = ((SwipeItem)sender).BindingContext as Models.Item;
-            OnPropertyChanged("List");
-            List.RemoveItem(itemToDelete);
             if (itemToDelete is Models.Task)
             {
-                if (SearchBar.Text == null || SearchBar.Text.Length == 0)
-                {
-                    TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
-                }
-                else
-                {
-                    TaskCV.ItemsSource = List.SearchFor(SearchBar.Text).Where(item => item is Models.Task);
-                }
+                OnPropertyChanged("Tasks");
+                List.Tasks.Remove(itemToDelete as Models.Task);
             }
             else
             {
-                if (SearchBar.Text == null || SearchBar.Text.Length == 0)
-                {
-                    AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
-                }
-                else
-                {
-                    AppointmentCV.ItemsSource = List.SearchFor(SearchBar.Text).Where(item => item is Models.Appointment);
-                }
+                OnPropertyChanged("Appointments");
+                List.Appointments.Remove(itemToDelete as Models.Appointment);
             }
+            Global.Save();
+            SearchAndFilter();
         }
 
         async void AddButton_Clicked(System.Object sender, System.EventArgs e)
         {
             string action = await DisplayActionSheet("Pick an item to create", "Cancel", null, "Task", "Appointment");
-            if (action != "Cancel")
-            {
-                FilterPicker.SelectedIndex = -1;
-                SearchBar.Text = "";
-            }
             if (action == "Task")
             {
                 ApptFrame.IsVisible = false;
@@ -131,11 +123,13 @@ namespace TaskBook.Pages
         async void CreateApptButton_Clicked(System.Object sender, System.EventArgs e)
         {
             Models.Appointment appointment = new Models.Appointment();
+            int idx = 0;
             if (BeingEdited != null)
             {
                 if (BeingEdited is Models.Appointment)
                 {
                     appointment = BeingEdited as Models.Appointment;
+                    idx = List.Appointments.IndexOf(appointment);
                 }
             }
             if (ApptName.Text == null || ApptName.Text.Trim().Length == 0)
@@ -159,16 +153,20 @@ namespace TaskBook.Pages
             appointment.Start = startDateTime;
             appointment.Stop = endDateTime;
             appointment.Attendees = AttendeeList.ToList();
-            OnPropertyChanged("List");
+            OnPropertyChanged("Appointments");
             if (BeingEdited == null)
             {
-                List.AddItem(appointment);
+                List.Appointments.Add(appointment);
             }
             else
             {
+                List.Appointments.RemoveAt(idx);
+                OnPropertyChanged("Appointments");
+                List.Appointments.Insert(idx, appointment);
                 BeingEdited = null;
             }
-            AppointmentCV.ItemsSource = List.Items.Where(item => item is Models.Appointment);
+            Global.Save();
+            SearchAndFilter();
             ClearApptInput();
             ApptFrame.IsVisible = false;
         }
@@ -176,11 +174,13 @@ namespace TaskBook.Pages
         async void CreateTaskButton_Clicked(System.Object sender, System.EventArgs e)
         {
             Models.Task task = new Models.Task();
+            int idx = 0;
             if (BeingEdited != null)
             {
                 if (BeingEdited is Models.Task)
                 {
                     task = BeingEdited as Models.Task;
+                    idx = List.Tasks.IndexOf(task);
                 }
             }
             if (TaskName.Text == null || TaskName.Text.Trim().Length == 0)
@@ -199,16 +199,20 @@ namespace TaskBook.Pages
             TimeSpan time = TaskTimePicker.Time;
             DateTime deadline = new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds);
             task.Deadline = deadline;
-            OnPropertyChanged("List");
+            OnPropertyChanged("Tasks");
             if (BeingEdited == null)
             {
-                List.AddItem(task);
+                List.Tasks.Add(task);
             }
             else
             {
+                List.Tasks.RemoveAt(idx);
+                OnPropertyChanged("Tasks");
+                List.Tasks.Insert(idx, task);
                 BeingEdited = null;
             }
-            TaskCV.ItemsSource = List.Items.Where(item => item is Models.Task);
+            Global.Save();
+            SearchAndFilter();
             ClearTaskInput();
             TaskFrame.IsVisible = false;
         }
@@ -319,6 +323,11 @@ namespace TaskBook.Pages
             {
                 await DisplayAlert("", item.ToString(), "OK");
             }
+        }
+
+        void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            Global.Save();
         }
     }
 }
