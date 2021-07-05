@@ -14,8 +14,8 @@ namespace TaskBook.Models
         {
             CultureInfo cultureInfo = CultureInfo
                 .CreateSpecificCulture("en-US");
-            string attendees = string.Join(", ", this.Attendees);
-            return $"{this.Name}" +
+            string attendees = string.Join(", ", Attendees);
+            return $"{Name}" +
                 $"\n\tPriority: {Priority}" +
                 $"\n\tDescription: {Description}" +
                 $"\n\tStart: {Start.ToString("G", cultureInfo)}" +

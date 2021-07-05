@@ -9,9 +9,9 @@ namespace TaskBook.Models
 
         public override string ToString()
         {
-            string status = (this.IsCompleted) ?
+            string status = (IsCompleted) ?
                 " (Completed)" : " (Incomplete)";
-            return $"{this.Name} {status}" +
+            return $"{Name} {status}" +
                 $"\n\tPriority: {Priority}" +
                 $"\n\tDescription: {Description}" +
                 $"\n\tDeadline: {Deadline}";
