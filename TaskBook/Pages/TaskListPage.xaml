@@ -36,6 +36,9 @@
                         <SwipeItem Text="Delete"
                                    BackgroundColor="Red"
                                    Invoked='DeleteSwipeItem_Invoked'/>
+                        <SwipeItem Text="Edit"
+                                       BackgroundColor="SeaGreen"
+                                       Invoked="EditSwipeItem_Invoked"/>
                     </SwipeItems>
                 </SwipeView.RightItems>
                 <Frame BackgroundColor="SlateGray"

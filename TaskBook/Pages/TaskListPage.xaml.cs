@@ -78,5 +78,27 @@ namespace TaskBook.Pages
                 new ObservableCollection<Models.TaskList>(results.ToList());
             return filteredItems;
         }
+
+        async void EditSwipeItem_Invoked(System.Object sender, System.EventArgs e)
+        {
+            var itemToEdit = ((SwipeItem)sender).BindingContext
+                as Models.TaskList;
+            string result = await DisplayPromptAsync("Task List Creator",
+                $"Enter a new name for your the tasklist: {itemToEdit.Name}.");
+            int idx = TaskLists.IndexOf(itemToEdit);
+            if (result != null && result != "")
+            {
+                itemToEdit.Name = result.Trim();
+                OnPropertyChanged("TaskLists");
+                TaskLists.RemoveAt(idx);
+                OnPropertyChanged("TaskLists");
+                TaskLists.Insert(idx, itemToEdit);
+                Global.Save();
+            }
+            if (SearchBar.Text != null && SearchBar.Text.Length != 0)
+            {
+                TasklistCV.ItemsSource = SearchFor(SearchBar.Text);
+            }
+        }
     }
 }
