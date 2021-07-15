@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 
 namespace TaskBook.Models
 {
     public class TaskList
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = "";
         public ObservableCollection<Task> Tasks { get; set; }
             = new ObservableCollection<Task>();

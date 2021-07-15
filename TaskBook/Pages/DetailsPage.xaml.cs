@@ -102,15 +102,15 @@ namespace TaskBook.Pages
                 .BindingContext as Models.Item;
             if (itemToDelete is Models.Task)
             {
-                OnPropertyChanged("Tasks");
                 List.Tasks.Remove(itemToDelete as Models.Task);
+                OnPropertyChanged("Tasks");
             }
             else
             {
-                OnPropertyChanged("Appointments");
                 List.Appointments.Remove(itemToDelete as Models.Appointment);
+                OnPropertyChanged("Appointments");
             }
-            Global.Save();
+            Global.Save(List.Id, itemToDelete);
             SearchAndFilter();
         }
 
@@ -170,19 +170,19 @@ namespace TaskBook.Pages
             appointment.Start = startDateTime;
             appointment.Stop = endDateTime;
             appointment.Attendees = AttendeeList.ToList();
-            OnPropertyChanged("Appointments");
             if (BeingEdited == null)
             {
                 List.Appointments.Add(appointment);
+                OnPropertyChanged("Appointments");
             }
             else
             {
                 List.Appointments.RemoveAt(idx);
-                OnPropertyChanged("Appointments");
                 List.Appointments.Insert(idx, appointment);
+                OnPropertyChanged("Appointments");
                 BeingEdited = null;
             }
-            Global.Save();
+            Global.Save(List.Id, appointment);
             SearchAndFilter();
             ClearApptInput();
             ApptFrame.IsVisible = false;
@@ -221,19 +221,19 @@ namespace TaskBook.Pages
             DateTime deadline = new DateTime(date.Year, date.Month,
                 date.Day, time.Hours, time.Minutes, time.Seconds);
             task.Deadline = deadline;
-            OnPropertyChanged("Tasks");
             if (BeingEdited == null)
             {
                 List.Tasks.Add(task);
+                OnPropertyChanged("Tasks");
             }
             else
             {
                 List.Tasks.RemoveAt(idx);
-                OnPropertyChanged("Tasks");
                 List.Tasks.Insert(idx, task);
+                OnPropertyChanged("Tasks");
                 BeingEdited = null;
             }
-            Global.Save();
+            Global.Save(List.Id, task);
             SearchAndFilter();
             ClearTaskInput();
             TaskFrame.IsVisible = false;
@@ -260,14 +260,14 @@ namespace TaskBook.Pages
                 foreach(string n in nameList)
                 {
                     string trimmedStr = n.Trim();
-                    OnPropertyChanged("AttendeeList");
                     AttendeeList.Add(trimmedStr);
+                    OnPropertyChanged("AttendeeList");
                 }
             }
             else
             {
-                OnPropertyChanged("AttendeeList");
                 AttendeeList.Add(name.Trim());
+                OnPropertyChanged("AttendeeList");
             }
             AttendeeEntry.Text = "";
         }
@@ -278,8 +278,8 @@ namespace TaskBook.Pages
             var selectedName = e.CurrentSelection.FirstOrDefault() as string;
             if (selectedName != null)
             {
-                OnPropertyChanged("AttendeeList");
                 AttendeeList.Remove(selectedName);
+                OnPropertyChanged("AttendeeList");
             }
             AttendeeCV.SelectedItem = null;
         }
@@ -304,8 +304,8 @@ namespace TaskBook.Pages
             ApptStartTimePicker.Time = DateTime.Today.TimeOfDay;
             ApptEndDatePicker.Date = DateTime.Today;
             ApptEndTimePicker.Time = DateTime.Today.TimeOfDay;
-            OnPropertyChanged("AttendeeList");
             AttendeeList.Clear();
+            OnPropertyChanged("AttendeeList");
         }
 
         void EditTask(Models.Task task)
@@ -334,8 +334,8 @@ namespace TaskBook.Pages
             ApptEndTimePicker.Time = appt.Stop.TimeOfDay;
             foreach (string name in appt.Attendees)
             {
-                OnPropertyChanged("AttendeeList");
                 AttendeeList.Add(name);
+                OnPropertyChanged("AttendeeList");
             }
         }
 
@@ -351,7 +351,8 @@ namespace TaskBook.Pages
 
         void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            Global.Save();
+            var selectedTask = ((CheckBox)sender).BindingContext as Models.Task;
+            Global.Save(List.Id, selectedTask);
         }
     }
 }

@@ -8,7 +8,6 @@ namespace TaskBook
         public App()
         {
             InitializeComponent();
-            Global.Init();
             MainPage = new NavigationPage(new TaskBook.Pages.TaskListPage());
         }
 

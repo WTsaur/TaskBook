@@ -12,7 +12,7 @@ namespace TaskBook.Pages
         public TaskListPage()
         {
             InitializeComponent();
-            TaskLists = Global.Data;
+            TaskLists = Global.GetAll();
             BindingContext = this;
         }
 
@@ -28,16 +28,16 @@ namespace TaskBook.Pages
             TasklistCV.SelectedItem = null;
         }
 
-        void DeleteSwipeItem_Invoked(System.Object sender, System.EventArgs e)
+        async void DeleteSwipeItem_Invoked(System.Object sender, System.EventArgs e)
         {
-            var itemToDelete = ((SwipeItem)sender).BindingContext
+            var listToDelete = ((SwipeItem)sender).BindingContext
                 as Models.TaskList;
+            TaskLists.Remove(listToDelete);
             OnPropertyChanged("TaskLists");
-            TaskLists.Remove(itemToDelete);
-            Global.Save();
+            await Global.Delete(listToDelete);
             if (SearchBar.Text != null && SearchBar.Text.Length != 0)
             {
-                TasklistCV.ItemsSource = SearchFor(SearchBar.Text);
+                TasklistCV.ItemsSource = Global.SearchLists(SearchBar.Text.Trim());
             }
         }
 
@@ -48,13 +48,14 @@ namespace TaskBook.Pages
                 "Enter a name for your new task list.");
             if (result != null && result != "")
             {
+                var listToAdd = new Models.TaskList { Name = result.Trim() };
+                TaskLists.Add(listToAdd);
                 OnPropertyChanged("TaskLists");
-                TaskLists.Add(new Models.TaskList { Name = result.Trim() });
-                Global.Save();
+                await Global.Save(listToAdd);
             }
             if (SearchBar.Text != null && SearchBar.Text.Length != 0)
             {
-                TasklistCV.ItemsSource = SearchFor(SearchBar.Text);
+                TasklistCV.ItemsSource = Global.SearchLists(SearchBar.Text.Trim());
             }
         }
 
@@ -62,42 +63,25 @@ namespace TaskBook.Pages
             Xamarin.Forms.TextChangedEventArgs e)
         {
             SearchBar searchBar = (SearchBar)sender;
-            TasklistCV.ItemsSource = SearchFor(searchBar.Text);
-        }
-
-        public ObservableCollection<Models.TaskList> SearchFor(String str)
-        {
-            if (str.Trim().Length == 0)
-            {
-                return TaskLists;
-            }
-            var results = from list in TaskLists
-                          where list.Name.ToLower().Contains(str.ToLower())
-                          select list;
-            ObservableCollection<Models.TaskList> filteredItems =
-                new ObservableCollection<Models.TaskList>(results.ToList());
-            return filteredItems;
+            TasklistCV.ItemsSource = Global.SearchLists(searchBar.Text.Trim());
         }
 
         async void EditSwipeItem_Invoked(System.Object sender, System.EventArgs e)
         {
-            var itemToEdit = ((SwipeItem)sender).BindingContext
+            var listToEdit = ((SwipeItem)sender).BindingContext
                 as Models.TaskList;
             string result = await DisplayPromptAsync("Task List Creator",
-                $"Enter a new name for your the tasklist: {itemToEdit.Name}.");
-            int idx = TaskLists.IndexOf(itemToEdit);
+                $"Enter a new name for your the tasklist: {listToEdit.Name}.");
+            int idx = TaskLists.IndexOf(listToEdit);
             if (result != null && result != "")
             {
-                itemToEdit.Name = result.Trim();
+                listToEdit.Name = result.Trim();
                 OnPropertyChanged("TaskLists");
-                TaskLists.RemoveAt(idx);
-                OnPropertyChanged("TaskLists");
-                TaskLists.Insert(idx, itemToEdit);
-                Global.Save();
+                await Global.Save(listToEdit);
             }
             if (SearchBar.Text != null && SearchBar.Text.Length != 0)
             {
-                TasklistCV.ItemsSource = SearchFor(SearchBar.Text);
+                TasklistCV.ItemsSource = Global.SearchLists(SearchBar.Text.Trim());
             }
         }
     }
