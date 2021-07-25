@@ -75,7 +75,10 @@ namespace TaskBook.Pages
             int idx = TaskLists.IndexOf(listToEdit);
             if (result != null && result != "")
             {
-                listToEdit.Name = result.Trim();
+                var list = TaskLists.ElementAt(idx);
+                list.Name = result.Trim();
+                TaskLists.RemoveAt(idx);
+                TaskLists.Insert(idx, list);
                 OnPropertyChanged("TaskLists");
                 await Global.Save(listToEdit);
             }

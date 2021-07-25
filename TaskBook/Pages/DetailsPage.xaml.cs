@@ -110,7 +110,7 @@ namespace TaskBook.Pages
                 List.Appointments.Remove(itemToDelete as Models.Appointment);
                 OnPropertyChanged("Appointments");
             }
-            Global.Save(List.Id, itemToDelete);
+            Global.Delete(List.Id, itemToDelete);
             SearchAndFilter();
         }
 
@@ -182,7 +182,7 @@ namespace TaskBook.Pages
                 OnPropertyChanged("Appointments");
                 BeingEdited = null;
             }
-            Global.Save(List.Id, appointment);
+            await Global.Save(List);
             SearchAndFilter();
             ClearApptInput();
             ApptFrame.IsVisible = false;
